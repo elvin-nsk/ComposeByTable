@@ -61,13 +61,13 @@ End Sub
 ' # Helpers
 
 Private Function GetRawMotifsFromTable() As Collection
-    Dim TableFile As IFileSpec
-    Set TableFile = FileSpec.Create(This.Cfg("TableFile"))
+    Dim TableFile As String
+    TableFile = This.Cfg("TableFile")
     If Not FileExists(TableFile) Then
         Throw "Не найден файл " & vbCrLf & TableFile
     End If
     Dim Table As ITableFile
-    Set Table = ExcelConnection.CreateReadOnly(TableFile)
+    Set Table = CsvUtilsTableFile.CreateReadOnly(TableFile)
     Set GetRawMotifsFromTable = New Collection
     Dim Row As Long
     For Row = 1 To Table.MaxRow

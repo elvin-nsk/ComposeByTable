@@ -1,7 +1,7 @@
 Attribute VB_Name = "LibCore"
 '===============================================================================
 '   Модуль          : LibCore
-'   Версия          : 2023.07.23
+'   Версия          : 2023.09.01
 '   Автор           : elvin-nsk (me@elvin.nsk.ru)
 '   Использован код : dizzy (из макроса CtC), Alex Vakulenko
 '                     и др.
@@ -1638,12 +1638,18 @@ Public Property Get Contains( _
     Contains = True
 End Property
 
-Public Property Get Count(ByRef Arr As Variant) As Long
-    Count = UBound(Arr) - LBound(Arr) + 1
+Public Property Get Count( _
+                        ByRef Arr As Variant, _
+                        Optional ByVal Dimension As Long = 1 _
+                    ) As Long
+    Count = UBound(Arr, Dimension) - LBound(Arr, Dimension) + 1
 End Property
 
-Public Property Get CountCopy(ByVal Arr As Variant) As Long
-    CountCopy = UBound(Arr) - LBound(Arr) + 1
+Public Property Get CountCopy( _
+                        ByVal Arr As Variant, _
+                        Optional ByVal Dimension As Long = 1 _
+                    ) As Long
+    CountCopy = Count(Arr, Dimension)
 End Property
 
 'https://www.codegrepper.com/code-examples/vb/excel+vba+generate+guid+uuid

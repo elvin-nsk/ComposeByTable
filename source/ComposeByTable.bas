@@ -1,7 +1,7 @@
 Attribute VB_Name = "ComposeByTable"
 '===============================================================================
 '   Макрос          : ComposeByTable
-'   Версия          : 2023.08.28
+'   Версия          : 2023.09.01
 '   Сайты           : https://vk.com/elvin_macro
 '                     https://github.com/elvin-nsk
 '   Автор           : elvin-nsk (me@elvin.nsk.ru)
@@ -98,5 +98,9 @@ End Property
 ' # тесты
 
 Private Sub Test1()
-    '
+    Dim File As String
+    File = ""
+    With CsvUtilsTableFile.CreateReadOnly(File, , 2, 1)
+        Show .Cell(1, 1)
+    End With
 End Sub

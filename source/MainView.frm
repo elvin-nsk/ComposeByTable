@@ -61,7 +61,7 @@ End Sub
 Private Sub ButtonBrowseTable_Click()
     With New FileBrowser
         .Filter = _
-            "Excel (*.xlsx)" & Chr(0) & "*.xlsx"
+            "Excel (*.csv)" & Chr(0) & "*.csv"
         .MultiSelect = False
         .InitialDir = FileSpec.Create(TextBoxTable).Path
         Dim Result As Collection
