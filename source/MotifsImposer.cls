@@ -9,7 +9,7 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 '===============================================================================
 '   Модуль          : MotifsImposer
-'   Версия          : 2023.08.28
+'   Версия          : 2023.09.05
 '   Автор           : elvin-nsk (me@elvin.nsk.ru)
 '   Сайт            : https://github.com/elvin-nsk/LowCoupledFromCore
 '   Назначение      :
@@ -221,6 +221,7 @@ Private Sub Impose( _
     With This
     
         Set .Elements = ImportAsMarkedElements(.MotifsToImport)
+        If .Elements.Count = 0 Then Exit Sub
         Dim Elements As Collection
         Set Elements = .Elements
         

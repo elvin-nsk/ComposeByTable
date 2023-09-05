@@ -46,8 +46,6 @@ Public Sub MainRoutine(ByVal Cfg As PresetsConfig)
     Dim Motifs As Collection
     Set Motifs = GetValidMotifs(GetRawMotifsFromTable)
     
-    If Motifs.Count = 0 Then Exit Sub
-    
     Set Imposer = MotifsImposer.CreateFromImport(Motifs, False)
     With Imposer
         .SetEdgeMarginsEqual Cfg("Space")
