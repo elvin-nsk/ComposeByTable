@@ -46,6 +46,8 @@ Public Sub MainRoutine(ByVal Cfg As PresetsConfig)
     Dim Motifs As Collection
     Set Motifs = GetValidMotifs(GetRawMotifsFromTable)
     
+    If Motifs.Count = 0 Then Exit Sub
+    
     Set Imposer = MotifsImposer.CreateFromImport(Motifs, False)
     With Imposer
         .SetEdgeMarginsEqual Cfg("Space")
@@ -115,7 +117,7 @@ Private Function GetValidMotifs(ByVal RawMotifs As Collection) As Collection
             If FileExists(.ToString) Then
                 GetValidMotifs.Add Motif
             Else
-                This.Logger.Add "Не найден файл " & .Name
+                This.Logger.Add "Не найден файл " & .NameWithoutExt
             End If
         End With
     Next Motif

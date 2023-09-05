@@ -1,7 +1,7 @@
 Attribute VB_Name = "ComposeByTable"
 '===============================================================================
 '   Макрос          : ComposeByTable
-'   Версия          : 2023.09.01
+'   Версия          : 2023.09.05
 '   Сайты           : https://vk.com/elvin_macro
 '                     https://github.com/elvin-nsk
 '   Автор           : elvin-nsk (me@elvin.nsk.ru)
