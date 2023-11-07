@@ -1,7 +1,7 @@
 Attribute VB_Name = "ComposeByTable"
 '===============================================================================
 '   Макрос          : ComposeByTable
-'   Версия          : 2023.09.05
+'   Версия          : 2023.11.07
 '   Сайты           : https://vk.com/elvin_macro
 '                     https://github.com/elvin-nsk
 '   Автор           : elvin-nsk (me@elvin.nsk.ru)
@@ -66,7 +66,8 @@ Private Sub CfgToMainView( _
     With View
         .PlaceWidth = Cfg("PlaceWidth")
         .PlaceHeight = Cfg("PlaceHeight")
-        .Space = Cfg("Space")
+        .SpaceWidth = Cfg("SpaceWidth")
+        .SpaceHeight = Cfg("SpaceHeight")
         .TextBoxMotifsFolder = Cfg("MotifsPath")
         .TextBoxTable = Cfg("TableFile")
     End With
@@ -79,7 +80,8 @@ Private Sub MainViewToCfg( _
     With View
         Cfg("PlaceWidth") = .PlaceWidth
         Cfg("PlaceHeight") = .PlaceHeight
-        Cfg("Space") = .Space
+        Cfg("SpaceWidth") = .SpaceWidth
+        Cfg("SpaceHeight") = .SpaceHeight
         Cfg("MotifsPath") = .TextBoxMotifsFolder
         Cfg("TableFile") = .TextBoxTable
     End With
@@ -90,7 +92,8 @@ Private Property Get Defaults() As Dictionary
     With Defaults
         .Item("PlaceWidth") = 100#
         .Item("PlaceHeight") = 100#
-        .Item("Space") = 0#
+        .Item("SpaceWidth") = 0
+        .Item("SpaceHeight") = 0
     End With
 End Property
 

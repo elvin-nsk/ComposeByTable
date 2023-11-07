@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} MainView 
    Caption         =   "Расклад по таблице"
-   ClientHeight    =   3210
+   ClientHeight    =   3465
    ClientLeft      =   45
    ClientTop       =   390
    ClientWidth     =   6975
@@ -27,8 +27,9 @@ Public PlaceWidth As TextBoxHandler
 Attribute PlaceWidth.VB_VarHelpID = -1
 Public PlaceHeight As TextBoxHandler
 Attribute PlaceHeight.VB_VarHelpID = -1
-Public Space As TextBoxHandler
-Attribute Space.VB_VarHelpID = -1
+Public SpaceWidth As TextBoxHandler
+Attribute SpaceWidth.VB_VarHelpID = -1
+Public SpaceHeight As TextBoxHandler
 
 '===============================================================================
 
@@ -37,8 +38,10 @@ Private Sub UserForm_Initialize()
         TextBoxHandler.Create(TextBoxPlaceWidth, TextBoxTypeDouble, MIN_SIZE)
     Set PlaceHeight = _
         TextBoxHandler.Create(TextBoxPlaceHeight, TextBoxTypeDouble, MIN_SIZE)
-    Set Space = _
-        TextBoxHandler.Create(TextBoxSpace, TextBoxTypeDouble)
+    Set SpaceWidth = _
+        TextBoxHandler.Create(TextBoxSpaceWidth, TextBoxTypeDouble)
+    Set SpaceHeight = _
+        TextBoxHandler.Create(TextBoxSpaceHeight, TextBoxTypeDouble)
 End Sub
 
 Private Sub UserForm_Activate()

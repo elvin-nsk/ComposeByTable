@@ -1,7 +1,7 @@
 Attribute VB_Name = "LibCore"
 '===============================================================================
 '   Модуль          : LibCore
-'   Версия          : 2023.09.01
+'   Версия          : 2023.10.19
 '   Автор           : elvin-nsk (me@elvin.nsk.ru)
 '   Использован код : dizzy (из макроса CtC), Alex Vakulenko
 '                     и др.
@@ -731,12 +731,30 @@ Public Property Get IsValidSubPath(ByVal MaybeSubPath As Variant) As Boolean
 Fail:
 End Property
 
+Public Property Get GetCombinedCurve(ByVal Shapes As ShapeRange) As Curve
+    Set GetCombinedCurve = CreateCurve(Shapes.FirstShape.Page.Parent.Parent)
+    Dim Shape As Shape
+    For Each Shape In Shapes
+        GetCombinedCurve.AppendCurve GetCurve(Shape)
+    Next Shape
+End Property
+
 Public Property Get GetCurve(ByVal MaybeShape As Variant) As Curve
     If Not IsShape(MaybeShape) Then GoTo Fail
     Dim Temp As Double
     On Error GoTo Fail
     Set GetCurve = MaybeShape.Curve
     On Error GoTo 0
+Fail:
+End Property
+
+Public Property Get HasDiplayCurve(ByVal MaybeShape As Variant) As Boolean
+    If Not IsShape(MaybeShape) Then GoTo Fail
+    Dim Temp As Double
+    On Error GoTo Fail
+    Temp = MaybeShape.DisplayCurve.Length
+    On Error GoTo 0
+    HasDiplayCurve = Temp > 0
 Fail:
 End Property
 

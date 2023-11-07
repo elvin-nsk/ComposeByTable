@@ -12,11 +12,11 @@ Option Explicit
 '===============================================================================
 ' # Declarations
 
-Private Type typeThis
+Private Type This
     Cfg As PresetsConfig
     Logger As SimpleLogger
 End Type
-Private This As typeThis
+Private This As This
 
 Private WithEvents Imposer As MotifsImposer
 Attribute Imposer.VB_VarHelpID = -1
@@ -32,9 +32,11 @@ Private Sub Class_Terminate()
     This.Logger.Check
 End Sub
 
-Private Sub Imposer_OnImportFile(ByVal ioMotif As Motif)
-    ioMotif.SurfaceA.Content.SetSize _
-        This.Cfg("PlaceWidth"), This.Cfg("PlaceHeight")
+Private Sub Imposer_OnImportShape(ByRef ioShape As Shape)
+    ioShape.SetSize This.Cfg("PlaceWidth"), This.Cfg("PlaceHeight")
+    Dim RectShape As Shape
+    Set RectShape = ioShape.Layer.CreateRectangleRect(ioShape.BoundingBox)
+    Set ioShape = PackShapes(RectShape, ioShape).Group
 End Sub
 
 '===============================================================================
@@ -48,9 +50,12 @@ Public Sub MainRoutine(ByVal Cfg As PresetsConfig)
     
     Set Imposer = MotifsImposer.CreateFromImport(Motifs, False)
     With Imposer
-        .SetEdgeMarginsEqual Cfg("Space")
-        .VerticalSpace = Cfg("Space")
-        .HorizontalSpace = Cfg("Space")
+        .EdgeMarginLeft = Cfg("SpaceWidth")
+        .EdgeMarginRight = Cfg("SpaceWidth")
+        .EdgeMarginTop = Cfg("SpaceHeight")
+        .EdgeMarginBottom = Cfg("SpaceHeight")
+        .VerticalSpace = Cfg("SpaceHeight")
+        .HorizontalSpace = Cfg("SpaceWidth")
         .PlaceCropMarks = False
         
         .ImposeAutoAddPages
