@@ -13,6 +13,7 @@ Option Explicit
 ' # Declarations
 
 Private Const TEXT_SPACE As Double = 1
+Private Const BOTTOM_MARGIN As Double = 4
 
 Private Type This
     Cfg As PresetsConfig
@@ -50,17 +51,6 @@ Private Sub Imposer_OnPageImposed(ByVal Page As Page)
     SetTextOnPageBottom Page, Page.Index
 End Sub
 
-Private Function SetTextOnPageBottom( _
-                     ByVal Page As Page, ByVal Text As String _
-                 ) As Shape
-    Dim Shape As Shape
-    Set Shape = Page.ActiveLayer.CreateArtisticText(0, 0, Text)
-    Shape.SetSize , This.Cfg("SpaceHeight") - TEXT_SPACE
-    Shape.RightX = Page.RightX - TEXT_SPACE
-    Shape.BottomY = Page.BottomY + TEXT_SPACE
-    Set SetTextOnPageBottom = Shape
-End Function
-
 '===============================================================================
 ' # Public
 
@@ -74,8 +64,8 @@ Public Sub MainRoutine(ByVal Cfg As PresetsConfig)
     With Imposer
         .EdgeMarginLeft = Cfg("SpaceWidth")
         .EdgeMarginRight = Cfg("SpaceWidth")
-        .EdgeMarginTop = Cfg("SpaceHeight")
-        .EdgeMarginBottom = Cfg("SpaceHeight")
+        .EdgeMarginTop = 1
+        .EdgeMarginBottom = BOTTOM_MARGIN
         .VerticalSpace = 0
         .HorizontalSpace = Cfg("SpaceWidth")
         .PlaceCropMarks = False
@@ -175,4 +165,15 @@ Private Function SetTitle( _
         Set SetTitle = PackShapes(Title, Background).Group
         
     End With
+End Function
+
+Private Function SetTextOnPageBottom( _
+                     ByVal Page As Page, ByVal Text As String _
+                 ) As Shape
+    Dim Shape As Shape
+    Set Shape = Page.ActiveLayer.CreateArtisticText(0, 0, Text)
+    Shape.SetSize , BOTTOM_MARGIN - TEXT_SPACE * 2
+    Shape.RightX = Page.RightX - TEXT_SPACE
+    Shape.BottomY = Page.BottomY + TEXT_SPACE
+    Set SetTextOnPageBottom = Shape
 End Function
