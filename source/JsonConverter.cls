@@ -154,7 +154,7 @@ End Type
 #End If
 ' === End VBA-UTC
 
-Private Type typeThis
+Private Type This
     ' VBA only stores 15 significant digits,
     ' so any numbers larger than that are truncated
     ' This can lead to issues when BIGINT's are used
@@ -176,22 +176,15 @@ Private Type typeThis
     Whitespace As Variant
     Encode As Boolean
 End Type
-Private This As typeThis
+Private This As This
 
 '===============================================================================
 
-Public Function Create() As JsonConverter
-    With New JsonConverter
-        Set Create = .Init()
-    End With
-End Function
-
-Friend Function Init() As JsonConverter
+Private Sub Class_Initialize()
     With This
         .Encode = True
     End With
-    Set Init = Me
-End Function
+End Sub
 
 '===============================================================================
 

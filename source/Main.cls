@@ -12,6 +12,8 @@ Option Explicit
 '===============================================================================
 ' # Declarations
 
+Private Const TEXT_SPACE As Double = 1
+
 Private Type This
     Cfg As PresetsConfig
     Logger As SimpleLogger
@@ -32,12 +34,32 @@ Private Sub Class_Terminate()
     This.Logger.Check
 End Sub
 
-Private Sub Imposer_OnImportShape(ByRef ioShape As Shape)
-    ioShape.SetSize This.Cfg("PlaceWidth"), This.Cfg("PlaceHeight")
-    Dim RectShape As Shape
-    Set RectShape = ioShape.Layer.CreateRectangleRect(ioShape.BoundingBox)
-    Set ioShape = PackShapes(RectShape, ioShape).Group
+Private Sub Imposer_OnImportSurface(ByVal Surface As Surface)
+    With Surface
+        .Content.SetSize This.Cfg("PlaceWidth"), This.Cfg("PlaceHeight")
+        Dim RectShape As Shape
+        Set RectShape = _
+            .Content.Layer.CreateRectangleRect(.Content.BoundingBox)
+        Dim Title As Shape
+        Set Title = SetTitle(.Content, .File.BaseName)
+        Set .Content = PackShapes(RectShape, Title, .Content).Group
+    End With
 End Sub
+
+Private Sub Imposer_OnPageImposed(ByVal Page As Page)
+    SetTextOnPageBottom Page, Page.Index
+End Sub
+
+Private Function SetTextOnPageBottom( _
+                     ByVal Page As Page, ByVal Text As String _
+                 ) As Shape
+    Dim Shape As Shape
+    Set Shape = Page.ActiveLayer.CreateArtisticText(0, 0, Text)
+    Shape.SetSize , This.Cfg("SpaceHeight") - TEXT_SPACE
+    Shape.RightX = Page.RightX - TEXT_SPACE
+    Shape.BottomY = Page.BottomY + TEXT_SPACE
+    Set SetTextOnPageBottom = Shape
+End Function
 
 '===============================================================================
 ' # Public
@@ -48,17 +70,24 @@ Public Sub MainRoutine(ByVal Cfg As PresetsConfig)
     Dim Motifs As Collection
     Set Motifs = GetValidMotifs(GetRawMotifsFromTable)
     
-    Set Imposer = MotifsImposer.CreateFromImport(Motifs, False)
+    Set Imposer = MotifsImposer.NewFromImport(Motifs, False)
     With Imposer
         .EdgeMarginLeft = Cfg("SpaceWidth")
         .EdgeMarginRight = Cfg("SpaceWidth")
         .EdgeMarginTop = Cfg("SpaceHeight")
         .EdgeMarginBottom = Cfg("SpaceHeight")
-        .VerticalSpace = Cfg("SpaceHeight")
+        .VerticalSpace = 0
         .HorizontalSpace = Cfg("SpaceWidth")
         .PlaceCropMarks = False
         
         .ImposeAutoAddPages
+        
+        Dim Page As Page
+        Set Page = ActiveDocument.Pages.Last
+        Dim Summary As Shape
+        Set Summary = _
+            SetTextOnPageBottom(Page, "Видов успешно разложено: " & Motifs.Count)
+        Summary.LeftX = Page.LeftX + TEXT_SPACE
     End With
 End Sub
 
@@ -72,7 +101,7 @@ Private Function GetRawMotifsFromTable() As Collection
         Throw "Не найден файл " & vbCrLf & TableFile
     End If
     Dim Table As ITableFile
-    Set Table = CsvUtilsTableFile.CreateReadOnly(TableFile)
+    Set Table = CsvUtilsTableFile.NewReadOnly(TableFile)
     Set GetRawMotifsFromTable = New Collection
     Dim Row As Long
     For Row = 1 To Table.MaxRow
@@ -87,7 +116,7 @@ Private Sub TryAddRawMotifFromTableRow( _
             )
     With New Motif
         Set .SurfaceA = New Surface
-        Set .SurfaceA.File = FileSpec.Create
+        Set .SurfaceA.File = New FileSpec
         .SurfaceA.File.Path = This.Cfg("MotifsPath")
         
         On Error GoTo ErrFileName
@@ -120,8 +149,30 @@ Private Function GetValidMotifs(ByVal RawMotifs As Collection) As Collection
             If FileExists(.ToString) Then
                 GetValidMotifs.Add Motif
             Else
-                This.Logger.Add "Не найден файл " & .NameWithoutExt
+                This.Logger.Add "Не найден файл " & .BaseName
             End If
         End With
     Next Motif
+End Function
+
+Private Function SetTitle( _
+                     ByVal ParentShape As Shape, _
+                     ByVal Text As String _
+                 ) As Shape
+    With ParentShape
+        Dim Background As Shape
+        Set Background = _
+            .Layer.CreateRectangle( _
+                .LeftX, .BottomY, .RightX, .BottomY - This.Cfg("SpaceHeight") _
+            )
+        Background.Outline.SetNoOutline
+        Background.Fill.ApplyNoFill
+            
+        Dim Title As Shape
+        Set Title = .Layer.CreateArtisticText(0, 0, Text)
+        FitInside Title, SpaceBox(Background, -TEXT_SPACE)
+        
+        Set SetTitle = PackShapes(Title, Background).Group
+        
+    End With
 End Function

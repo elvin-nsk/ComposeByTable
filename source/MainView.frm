@@ -19,6 +19,7 @@ Option Explicit
 '===============================================================================
 
 Private Const MIN_SIZE As Double = 0.1
+Private Const MIN_VERTICAL_SPACE As Double = 4
 
 Public IsOk As Boolean
 Public IsCancel As Boolean
@@ -41,7 +42,10 @@ Private Sub UserForm_Initialize()
     Set SpaceWidth = _
         TextBoxHandler.Create(TextBoxSpaceWidth, TextBoxTypeDouble)
     Set SpaceHeight = _
-        TextBoxHandler.Create(TextBoxSpaceHeight, TextBoxTypeDouble)
+        TextBoxHandler.Create( _
+            TextBoxSpaceHeight, TextBoxTypeDouble, MIN_VERTICAL_SPACE _
+        )
+    LabelMinVerticalSpace = "( минимум " & MIN_VERTICAL_SPACE & " )"
 End Sub
 
 Private Sub UserForm_Activate()
@@ -51,8 +55,8 @@ End Sub
 Private Sub ButtonBrowseMotifsFolder_Click()
     Dim LastPath As String
     LastPath = TextBoxMotifsFolder
-    Dim Folder As IFileSpec
-    Set Folder = FileSpec.Create(TextBoxMotifsFolder)
+    Dim Folder As New FileSpec
+    Folder.Inject TextBoxMotifsFolder
     Folder.Path = CorelScriptTools.GetFolder(Folder.Path)
     If Folder.Path = "\" Then
         TextBoxMotifsFolder = LastPath
@@ -66,7 +70,9 @@ Private Sub ButtonBrowseTable_Click()
         .Filter = _
             "Excel (*.csv)" & Chr(0) & "*.csv"
         .MultiSelect = False
-        .InitialDir = FileSpec.Create(TextBoxTable).Path
+        Dim File As New FileSpec
+        File.Inject TextBoxTable
+        .InitialDir = File.Path
         Dim Result As Collection
         Set Result = .ShowFileOpenDialog
         If Result.Count > 0 Then TextBoxTable = Result(1)

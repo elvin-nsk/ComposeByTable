@@ -1,7 +1,7 @@
 Attribute VB_Name = "ComposeByTable"
 '===============================================================================
 '   Макрос          : ComposeByTable
-'   Версия          : 2023.11.07
+'   Версия          : 2024.02.13
 '   Сайты           : https://vk.com/elvin_macro
 '                     https://github.com/elvin-nsk
 '   Автор           : elvin-nsk (me@elvin.nsk.ru)
@@ -25,7 +25,7 @@ Sub Start()
     If RELEASE Then On Error GoTo Catch
     
     Dim Cfg As PresetsConfig
-    Set Cfg = PresetsConfig.Create("elvin_ComposeByTable", Defaults)
+    Set Cfg = PresetsConfig.New_("elvin_ComposeByTable", Defaults)
     
     Dim View As New MainView
     CfgToMainView View, Cfg
@@ -103,7 +103,7 @@ End Property
 Private Sub Test1()
     Dim File As String
     File = ""
-    With CsvUtilsTableFile.CreateReadOnly(File, , 2, 1)
+    With CsvUtilsTableFile.NewReadOnly(File, , 2, 1)
         Show .Cell(1, 1)
     End With
 End Sub
