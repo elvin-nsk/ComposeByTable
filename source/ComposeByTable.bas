@@ -15,8 +15,8 @@ Public Const APP_NAME As String = "ComposeByTable"
 
 '===============================================================================
 
-Private Const PAGE_WIDTH As Double = 216 'μμ
-Private Const PAGE_HEIGHT As Double = 306 'μμ
+Private Const PAGE_WIDTH As Double = 210 - 6 'μμ
+Private Const PAGE_HEIGHT As Double = 297 - 9 'μμ
 
 '===============================================================================
 
