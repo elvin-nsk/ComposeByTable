@@ -9,7 +9,7 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 '===============================================================================
 '   Модуль          : MotifsImposer
-'   Версия          : 2024.02.13
+'   Версия          : 2024.02.14
 '   Автор           : elvin-nsk (me@elvin.nsk.ru)
 '   Сайт            : https://github.com/elvin-nsk/LowCoupledFromCore
 '   Назначение      :
@@ -40,6 +40,7 @@ Private Type This
     MaxPlacesInWidth As Long
     MotifsToImport As Variant
     PlaceCropMarks As Boolean
+    PlacesTotalCounter As Long
     PlaceWhiteBackground As Boolean
     ReferencePoint As cdrReferencePoint
     RemainingElements As Collection
@@ -173,6 +174,10 @@ Public Property Get PlaceCropMarks() As Boolean
 End Property
 Public Property Let PlaceCropMarks(RHS As Boolean)
     This.PlaceCropMarks = RHS
+End Property
+
+Public Property Get PlacesTotal() As Long
+    PlacesTotal = This.PlacesTotalCounter
 End Property
 
 Public Property Get PlaceWhiteBackground() As Boolean
@@ -464,6 +469,7 @@ Private Function ImportAsMarkedShapes( _
     Dim ShapesToElement As ShapeRange
     Set ImportAsMarkedShapes = CreateShapeRange
     With Motif
+        This.PlacesTotalCounter = This.PlacesTotalCounter + .Quantity
         ImportContent .SurfaceA
         If This.PlaceWhiteBackground Then AddWhiteBackground .SurfaceA.Content
         .SurfaceA.Content.Name = SIDE_A_MARK

@@ -42,8 +42,12 @@ Private Sub Imposer_OnImportSurface(ByVal Surface As Surface)
         Set RectShape = _
             .Content.Layer.CreateRectangleRect(.Content.BoundingBox)
         Dim Title As Shape
-        Set Title = SetTitle(.Content, .File.BaseName)
-        Set .Content = PackShapes(RectShape, Title, .Content).Group
+        If This.Cfg("SetTitles") Then
+            Set Title = SetTitle(.Content, .File.BaseName)
+            Set .Content = PackShapes(RectShape, Title, .Content).Group
+        Else
+            Set .Content = PackShapes(RectShape, .Content).Group
+        End If
     End With
 End Sub
 
@@ -66,17 +70,19 @@ Public Sub MainRoutine(ByVal Cfg As PresetsConfig)
         .EdgeMarginRight = Cfg("SpaceWidth")
         .EdgeMarginTop = 1
         .EdgeMarginBottom = BOTTOM_MARGIN
-        .VerticalSpace = 0
+        .VerticalSpace = VBA.IIf(Cfg("SetTitles"), 0, Cfg("SpaceHeight"))
         .HorizontalSpace = Cfg("SpaceWidth")
         .PlaceCropMarks = False
         
         .ImposeAutoAddPages
-        
+                
         Dim Page As Page
         Set Page = ActiveDocument.Pages.Last
         Dim Summary As Shape
         Set Summary = _
-            SetTextOnPageBottom(Page, "Видов успешно разложено: " & Motifs.Count)
+            SetTextOnPageBottom( _
+                Page, "Видов: " & Motifs.Count & "   Мест: " & .PlacesTotal _
+            )
         Summary.LeftX = Page.LeftX + TEXT_SPACE
     End With
 End Sub
