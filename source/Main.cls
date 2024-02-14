@@ -12,7 +12,7 @@ Option Explicit
 '===============================================================================
 ' # Declarations
 
-Private Const TEXT_SPACE As Double = 1
+Private Const TEXT_SPACE As Double = 0.1
 Private Const BOTTOM_MARGIN As Double = 4
 
 Private Type This
